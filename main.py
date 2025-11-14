@@ -10,6 +10,6 @@ app.mount("/uploads", StaticFiles(directory="uploads"), name="uploads")
 # ✅ Include student routes (no .routes)
 app.include_router(student_router, prefix="/api")
 
-@app.get("/student")
+@app.get("/")
 def home():
     return {"message": "Welcome to College Management System API"}
