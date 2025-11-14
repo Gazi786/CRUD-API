@@ -264,7 +264,6 @@ def update_student(
 
 
 # 5. Delete student
-
 @router.delete("/students/{student_id}")
 def delete_student(student_id: int):
     conn = get_connection()
@@ -281,7 +280,7 @@ def delete_student(student_id: int):
             if not result:
                 raise HTTPException(status_code=404, detail="Student not found")
 
-            photo_name = result[0]
+            photo_name = result["photo"]   # ✅ FIXED
 
             # Delete DB row
             cursor.execute("DELETE FROM student WHERE student_id = %s", (student_id,))
@@ -289,10 +288,8 @@ def delete_student(student_id: int):
 
             # Delete file safely
             if photo_name:
-                UPLOAD_DIR = "uploads"
                 file_path = os.path.join(UPLOAD_DIR, photo_name)
 
-                # Check if file exists before deleting
                 if os.path.exists(file_path):
                     os.remove(file_path)
 
