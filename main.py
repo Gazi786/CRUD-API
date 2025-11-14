@@ -8,27 +8,16 @@ load_dotenv()  # Load .env file
 
 app = FastAPI(title="College Management System API")
 
-
+# Uploads folder
 UPLOAD_DIR = "uploads"
 os.makedirs(UPLOAD_DIR, exist_ok=True)
 
-# Serve uploads folder
-app.mount("/uploads", StaticFiles(directory=UPLOAD_DIR), name="uploads")
-
-PHOTO_BASE_URL = "http://127.0.0.1:8000/uploads"
-
-
-
-
-
-# Read photo base URL from .env
-PHOTO_BASE_URL = os.getenv("PHOTO_BASE_URL")
-
-# Store in app state so routes can access it
+# Read photo base URL from .env (fallback for local)
+PHOTO_BASE_URL = os.getenv("PHOTO_BASE_URL", "http://127.0.0.1:8000/uploads")
 app.state.PHOTO_BASE_URL = PHOTO_BASE_URL
 
-# Serve uploaded files
-app.mount("/uploads", StaticFiles(directory="uploads"), name="uploads")
+# Serve uploads folder (ONLY ONE TIME)
+app.mount("/uploads", StaticFiles(directory=UPLOAD_DIR), name="uploads")
 
 # Include Routers
 app.include_router(student_router, prefix="/api")
