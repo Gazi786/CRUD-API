@@ -264,21 +264,44 @@ def update_student(
 
 
 # 5. Delete student
+
 @router.delete("/students/{student_id}")
 def delete_student(student_id: int):
     conn = get_connection()
     if conn:
         try:
-            cursor = conn.cursor()
+            cursor = conn.cursor(dictionary=True)
+
+            # 1️⃣ Fetch student photo before deleting
+            cursor.execute("SELECT photo FROM student WHERE student_id = %s", (student_id,))
+            student = cursor.fetchone()
+
+            if not student:
+                raise HTTPException(status_code=404, detail="Student not found")
+
+            photo_name = student["photo"]
+
+            # Delete student from database
             cursor.execute("DELETE FROM student WHERE student_id = %s", (student_id,))
             conn.commit()
-            if cursor.rowcount == 0:
-                raise HTTPException(status_code=404, detail="student not found")     
-            return {"Message": "Student deleted successfully", "id": student_id}
+
+            # Delete photo file from uploads folder
+            if photo_name:
+                photo_path = os.path.join(UPLOAD_DIR, photo_name)
+
+                if os.path.exists(photo_path):
+                    os.remove(photo_path)
+                else:
+                    print("Photo not found, skipping delete.")
+
+            return {"message": "Student and photo deleted successfully", "id": student_id}
+
         except Exception as e:
             conn.rollback()
             raise HTTPException(status_code=500, detail=str(e))
+
         finally:
             cursor.close()
             conn.close()
+
     raise HTTPException(status_code=500, detail="Database connection failed")
