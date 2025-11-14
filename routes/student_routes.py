@@ -289,8 +289,8 @@ def delete_student(student_id: int):
 
             # Delete file safely
             if photo_name:
-                upload_path = "uploads"
-                file_path = os.path.join(upload_path, photo_name)
+                UPLOAD_DIR = "uploads"
+                file_path = os.path.join(UPLOAD_DIR, photo_name)
 
                 # Check if file exists before deleting
                 if os.path.exists(file_path):
