@@ -2,6 +2,7 @@ from fastapi import APIRouter, HTTPException, UploadFile, Form
 from fastapi.responses import FileResponse
 from db.database import get_connection
 from models.student import Student
+from dotenv import load_dotenv
 import shutil
 import os
 
@@ -10,6 +11,10 @@ router = APIRouter()
 # Folder to store uploaded photos
 UPLOAD_DIR = "uploads"
 os.makedirs(UPLOAD_DIR, exist_ok=True)
+
+# load .env and read PHOTO_BASE_URL
+load_dotenv()
+PHOTO_BASE_URL = os.getenv("PHOTO_BASE_URL", "http://localhost:8000/uploads")
 
 # 1. Add Student
 @router.post("/students")
@@ -48,7 +53,7 @@ def add_student(
             with open(photo_path, "wb") as buffer:
                 shutil.copyfileobj(photo.file, buffer)
 
-            photo_url = f"http://localhost:8000/uploads/{photo_filename}"
+            photo_url = f"{PHOTO_BASE_URL}/{photo_filename}"
 
             # Update DB with photo filename
             update_query = "UPDATE student SET photo = %s WHERE student_id = %s"
@@ -106,7 +111,7 @@ def view_single_student(student_id: int):
 
         # Add full photo URL if photo exists
         if student.get("photo"):
-            student["photo_url"] = f"http://localhost:8000/uploads/{student['photo']}"
+            student["photo_url"] = f"{PHOTO_BASE_URL}/{student['photo']}"
         else:
             student["photo_url"] = None
 
@@ -152,7 +157,7 @@ def view_all_student():
         # Add full photo URL for each student
         for student in students:
             if student["photo"]:
-                student["photo_url"] = f"http://localhost:8000/uploads/{student['photo']}"
+                student["photo_url"] = f"{PHOTO_BASE_URL}/{student['photo']}"
             else:
                 student["photo_url"] = None
 
@@ -243,7 +248,8 @@ def update_student(
         conn.commit()
 
         # Build full photo URL
-        photo_url = f"http://localhost:8000/uploads/{photo_filename}" if photo_filename else None
+        photo_url = f"{PHOTO_BASE_URL}/{photo_filename}" if photo_filename else None
+
 
         return {
             "message": "Student updated successfully",
