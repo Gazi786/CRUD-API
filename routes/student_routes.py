@@ -274,7 +274,7 @@ def delete_student(student_id: int):
         try:
             cursor = conn.cursor()
 
-            # Fetch existing photo name
+            # Get the student photo name
             cursor.execute("SELECT photo FROM student WHERE student_id = %s", (student_id,))
             result = cursor.fetchone()
 
@@ -283,13 +283,16 @@ def delete_student(student_id: int):
 
             photo_name = result[0]
 
-            # Delete record
+            # Delete DB row
             cursor.execute("DELETE FROM student WHERE student_id = %s", (student_id,))
             conn.commit()
 
-            # Delete photo file
+            # Delete file safely
             if photo_name:
-                file_path = os.path.join("uploads", photo_name)
+                upload_path = "uploads"
+                file_path = os.path.join(upload_path, photo_name)
+
+                # Check if file exists before deleting
                 if os.path.exists(file_path):
                     os.remove(file_path)
 
