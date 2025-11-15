@@ -17,7 +17,7 @@ PHOTO_BASE_URL = os.getenv("PHOTO_BASE_URL", "http://127.0.0.1:8000/uploads")
 app.state.PHOTO_BASE_URL = PHOTO_BASE_URL
 
 # Serve uploads folder (ONLY ONE TIME)
-app.mount("/E:\dotit\FastAPI_CRUD\uploads", StaticFiles(directory=UPLOAD_DIR), name="uploads")
+app.mount("/uploads", StaticFiles(directory=UPLOAD_DIR), name="uploads")
 
 # Include Routers
 app.include_router(student_router, prefix="/api")
