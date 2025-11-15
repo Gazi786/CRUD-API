@@ -14,7 +14,7 @@ os.makedirs(UPLOAD_DIR, exist_ok=True)
 
 # load .env and read PHOTO_BASE_URL
 load_dotenv()
-PHOTO_BASE_URL = os.getenv("PHOTO_BASE_URL", "http://127.0.0.1:8000/uploads")
+PHOTO_BASE_URL = os.getenv("PHOTO_BASE_URL")
 
 # 1. Add Student
 @router.post("/students")
