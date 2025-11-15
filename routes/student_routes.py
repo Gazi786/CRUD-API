@@ -286,7 +286,7 @@ def delete_student(student_id: int):
             if not result:
                 raise HTTPException(status_code=404, detail="Student not found")
 
-            photo_name = result["photo"]   # ✅ FIXED
+            photo_name = result["photo"]   # FIXED
 
             # Delete DB row
             cursor.execute("DELETE FROM student WHERE student_id = %s", (student_id,))
