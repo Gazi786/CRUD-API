@@ -20,7 +20,7 @@ app.state.PHOTO_BASE_URL = PHOTO_BASE_URL
 app.mount("/E:\dotit\FastAPI_CRUD\uploads", StaticFiles(directory=UPLOAD_DIR), name="uploads")
 
 # Include Routers
-app.include_router(student_router, prefix="/api")x
+app.include_router(student_router, prefix="/api")
 
 @app.get("/")
 def home():
