@@ -8,13 +8,13 @@ import os
 
 router = APIRouter()
 
-# # Folder to store uploaded photos
-# UPLOAD_DIR = "uploads"
-# os.makedirs(UPLOAD_DIR, exist_ok=True)
+# Folder to store uploaded photos
+UPLOAD_DIR = "uploads"
+os.makedirs(UPLOAD_DIR, exist_ok=True)
 
-# # load .env and read PHOTO_BASE_URL
-# load_dotenv()
-# PHOTO_BASE_URL = os.getenv("PHOTO_BASE_URL")
+# load .env and read PHOTO_BASE_URL
+load_dotenv()
+PHOTO_BASE_URL = os.getenv("PHOTO_BASE_URL")
 
 # 1. Add Student
 @router.post("/students")
